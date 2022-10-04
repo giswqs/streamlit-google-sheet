@@ -8,7 +8,7 @@ import leafmap
 from gsheetsdb import connect
 from shapely.geometry import Polygon, mapping
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="UT Parking", layout="wide")
 
 # Remove the sandwich menu in the upper right corner
 hide_streamlit_style = """
@@ -24,7 +24,7 @@ st.title("University of Tennessee Parking Lot Availability")
 
 col1, col2 = st.columns([1, 3])
 
-data = 'data/buildings.geojson'
+data = "data/buildings.geojson"
 
 gdf = gpd.read_file(data)
 gdf = gdf.astype({"osmid": int})
@@ -54,15 +54,21 @@ sheet_url = st.secrets["public_gsheets_parking"]
 rows = run_query(f'SELECT * FROM "{sheet_url}"')
 
 df = pd.DataFrame(rows)
-df = df.astype({"osmid": int})
-gdf2 = pd.merge(
-    gdf, df[["osmid", "capacity", "remaining"]], on="osmid", how='outer')
+df = df.astype({"osmid": int, "capacity": int, "remaining": int})
+gdf2 = pd.merge(gdf, df[["osmid", "capacity", "remaining"]], on="osmid", how="outer")
 with col1:
     st.header("Parking Lots")
     extruded = st.checkbox("3D View", value=False)
     st.dataframe(df)
-    st.image(
-        "https://brand.utk.edu/wp-content/uploads/sites/66/2019/02/University-HorizRightLogo-RGB.png")
+
+    st.info(
+        """
+        Source code:
+        [https://github.com/giswqs/streamlit-google-sheet](https://github.com/giswqs/streamlit-google-sheet)
+        """
+    )
+
+    st.image("https://i.imgur.com/NcDcIWa.png")
 
 
 layer = pdk.Layer(
