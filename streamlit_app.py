@@ -10,6 +10,16 @@ from shapely.geometry import Polygon, mapping
 
 st.set_page_config(layout="wide")
 
+# Remove the sandwich menu in the upper right corner
+hide_streamlit_style = """
+            <style>
+            # MainMenu {visibility: hidden;}
+            header, footer {visibility: hidden;}
+            div.block-container {padding-top:1rem;padding-left:2rem;padding-right:2rem;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.title("University of Tennessee Parking Lot Availability")
 
 col1, col2 = st.columns([1, 3])
@@ -51,6 +61,8 @@ with col1:
     st.header("Parking Lots")
     extruded = st.checkbox("3D View", value=False)
     st.dataframe(df)
+    st.image(
+        "https://brand.utk.edu/wp-content/uploads/sites/66/2019/02/University-HorizRightLogo-RGB.png")
 
 
 layer = pdk.Layer(
